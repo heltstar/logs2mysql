@@ -1,0 +1,6 @@
+{
+    "logfiles":[
+    {"log_file": "access.log","last_modify_time": 24, "offset": 566},
+    {"log_file": "access2.log","last_modify_time": 24, "offset": 566}
+    ]
+}
