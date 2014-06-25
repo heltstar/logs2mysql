@@ -1,6 +1,0 @@
-{
-    "logfiles":[
-    {"log_file": "access.log","last_modify_time": "2014-06-16 17:14:17", "offset": 566},
-    {"log_file": "access1.log","last_modify_time": "2014-06-16 17:14:17", "offset": 66}
-    ]
-}
