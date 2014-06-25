@@ -1,28 +1,21 @@
-
 var sys = require('sys');
-var fs = require('fs');
-var readline = require('readline');
+var linereader = require('line-reader');
 var fun = require('./fun.js');
-//var jsonarr = require('./log_process_record.json');
-var ob = require("./log_process_record.json");
+
+var ob = require("./log_history.json");
+//var ob = require("./log_process_record.json");
 
 var str = JSON.stringify(ob);
 var obj2 = JSON.parse(str);
-var length = eval(obj2.logfiles).length;
-console.log("lenght="+ length);
-for(var i=0; i < length; i ++) 
+var logfiles_length = eval(obj2.logfiles).length;
+console.log("logfiles_lenght="+ logfiles_length);
+for(var i=0; i < logfiles_length; i ++) 
 {
-    console.log(obj2["logfiles"][i].log_file +":"+ obj2["logfiles"][i].last_modify_time +":"+obj2["logfiles"][i].offset);
+    console.log(obj2["logfiles"][i].log_file +"---"+ obj2["logfiles"][i].last_modify_time +"---"+obj2["logfiles"][i].offset);
 }
-
-
-var logs_stats = {lfu_stats:[]}; 
-var row = {"log_file": "access.log","last_modify_time": 24, "offset": 566, "pv":1};
 
 var file_path = "";
 var date_time= "";
-var json_all ="";
-//var log_src = "./access.log";
 
 var DATABASE = 'cdn_db';
 var TABLE = 'cdn_file_lfu_stats';
@@ -37,19 +30,11 @@ database : 'cdn_db',
 });
 connection.connect();
 
-var num;
-for(var i = 0; i < length; i++)
-{
-console.log("./"+obj2["logfiles"][i].log_file);
-    var rd = readline.createInterface({
-//input: fs.createReadStream(log_src),
-input: fs.createReadStream("./"+obj2["logfiles"][i].log_file),
-output: process.stdout,
-terminal: false
-});
+var logs_stats = {lfu_stats:[]}; 
 
-rd.on('line', function(line) {
-        //        console.log(line);
+for(var cnt = 0; cnt < logfiles_length; cnt ++){
+    linereader.eachLine(obj2["logfiles"][cnt].log_file, function(line) {
+//        console.log(line);
         var arr, item, child_arr, child_item;
         arr =line.split(" - ", 8);
         for(item in arr) 
@@ -66,29 +51,40 @@ rd.on('line', function(line) {
         file_path = child_arr[1];
         }
         }
-        connection.query('INSERT INTO '+ TABLE +' '+ 'SET file_path = ?, last_visit_time = ?, lfu_weight = ? ON DUPLICATE KEY UPDATE visit_count = visit_count + 1, last_visit_time = ?',
-            [file_path, date_time, 23, date_time]);  
+
+        var length = logs_stats.lfu_stats.length;
+        var j;
+        for(j = 0; j < length; j++)
+        {
+            if(logs_stats.lfu_stats[j].log_file == file_path)
+            {   
+                logs_stats.lfu_stats[j].pv += 1;
+                if(logs_stats.lfu_stats[j].last_modify_time < date_time)
+                {   
+                    logs_stats.lfu_stats[j].last_modify_time = date_time;
+                }   
+                break;
+            }   
+        }
+        if(j == length)
+        {
+            var row = {"log_file": file_path,"last_modify_time": date_time, "pv":1};
+           logs_stats.lfu_stats.push(row);
+        }
+    }).then(function() {
+        console.log("i'm done");
+        var count=0;
+        var all_length = logs_stats.lfu_stats.length;
+        console.log("last length: " + all_length);
+        for(var i =0 ;i <all_length; i++)
+        {
+        console.log(logs_stats.lfu_stats[i]);
+        file_path = logs_stats.lfu_stats[i].log_file;
+        date_time = logs_stats.lfu_stats[i].last_modify_time;
+        count = logs_stats.lfu_stats[i].pv;
+        connection.query('INSERT INTO '+ TABLE +' '+ 'SET file_path = ?, last_visit_time = ?, visit_count = ?, lfu_weight = ? ON DUPLICATE KEY UPDATE visit_count = visit_count + ?, last_visit_time = ?',
+            [file_path, date_time, count, 23, count, date_time]);  
+        }
         });
 }
 
-
-
-
-
-/*
-   connection.query('SELECT * from ' + TABLE, function(err, rows, fields) {
-   if (err) throw err;
-   console.log("rows.length:"+rows.length);
-   for(var i = 0; i < rows.length; i++)
-   {   
-//console.log('The solution is: ', rows[i].id, rows[i].firstname,  rows[i].lastname, rows[i].message);
-console.log(rows[i]);
-}   
-}); 
-
-connection.query('DELETE from cdn_file_lfu_stats where lfu_weight < 1', function(err, rows, fields) {
-if (err) throw err;
-console.log("delete ok");
-}); 
- */
-//connection.end();
