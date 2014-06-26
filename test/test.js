@@ -1,5 +1,12 @@
 
-var init_js = require("./init_json.js");
+var lib = require("./lib.js");
 
-var path = ".";
-init_js.init_json(path);
+
+console.log(lib.num);
+console.log(lib.a);
+console.log(lib.add());
+function f()
+{
+    console.log(lib.add());
+}
+setTimeout(f,1000);

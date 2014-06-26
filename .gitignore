@@ -1,1 +1,4 @@
 *access.log
+test
+test/*
+log_history.json

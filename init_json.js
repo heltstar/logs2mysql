@@ -1,6 +1,6 @@
 var ejson  = require('./forjson.js');
 var fs = require('fs');
-var LOG_HISTORY = 'log_history.json';
+var global = require("./global.js");
 
 function explorer(path){
     var cnt = 0;
@@ -37,11 +37,11 @@ function explorer(path){
 
         logrecord += ']' +'}';
         fs.writeFileSync("tmp.json", logrecord);
-        if(fs.existsSync(LOG_HISTORY))
+        if(fs.existsSync(global.log_history))
         {
-            fs.unlinkSync(LOG_HISTORY);
+            fs.unlinkSync(global.log_history);
         }
-        fs.renameSync("tmp.json", LOG_HISTORY);
+        fs.renameSync("tmp.json", global.log_history);
 }
 
     exports.init_json = explorer;
