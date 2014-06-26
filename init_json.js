@@ -22,14 +22,16 @@ function explorer(path){
                 var json_item;
                 if( json_item = ejson.exist_json(files[i]))
                 {
-                    logrecord += '{"log_file": "' + files[i] + '","last_modify_time": "' + fstat.atime + '", "offset": ' +json_item.offset+'}';
+                    logrecord += '{"log_file": "' + files[i] + '","last_modify_time": "' + fstat.atime + '", "offset": ' +json_item.file_sizes +', "file_sizes": ' + fstat.size + '}';
                 }
                 else
                 {
-                    logrecord += '{"log_file": "' + files[i] + '","last_modify_time": "' + fstat.atime + '", "offset": 0}';
+                    logrecord += '{"log_file": "' + files[i] + '","last_modify_time": "' + fstat.atime + '", "offset": 0'+', "file_sizes": ' + fstat.size +'}';
                 }
 //                console.log(logrecord);
                 cnt ++; 
+
+
             }    
         } 
 

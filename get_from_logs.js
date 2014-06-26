@@ -1,5 +1,8 @@
+
 var sys = require('sys');
+var fs = require('fs');
 var path = require('path');
+var readline = require("readline");
 var linereader = require('line-reader');
 var getdatetime = require('./getdatetime.js');
 var global = require("./global.js");
@@ -28,7 +31,13 @@ function get_from_logs(){
     var date_time= "";
 
     for(var cnt = 0; cnt < logfiles_length; cnt ++){
-        linereader.eachLine(obj2["log"][cnt].log_file, function(line) {
+        var rd = readline.createInterface({
+            input: fs.createReadStream(obj2["log"][cnt].log_file, {start:obj2["log"][cnt].offset, end:obj2["log"][cnt].file_sizes}),
+            output: process.stdout,
+            terminal: false
+        });
+
+    rd.on('line', function(line){
             var arr, item, child_arr, child_item;
             arr =line.split(" - ", 8);
             for(item in arr) 
@@ -63,9 +72,7 @@ function get_from_logs(){
                 var row = {"log_file": file_path,"last_modify_time": date_time, "pv":1};
                 logs_stats.lfu_stats.push(row);
             }
-    }).then(function() {
-        console.log("i'm done");
-        });
+    });
     }
 }
 
