@@ -47,6 +47,6 @@ initjson.init_json();
 setTimeout(getfromlogs.getfromlogs,1000);
 
 //setTimeout(write2mysql.write2mysql,120000);
-setTimeout(write2mysql.write2mysql,10000);
+setTimeout(write2mysql.write2mysql,20000);
 
 setTimeout(rmcoldfiles.rmcoldfiles, 300000);

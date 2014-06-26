@@ -2,6 +2,7 @@ var sys = require('sys');
 var fs = require('fs');
 var path = require('path');
 var readline = require("readline");
+var querystring = require('querystring');
 var getdatetime = require('./getdatetime.js');
 var global = require("./global.js");
 
@@ -50,6 +51,12 @@ function get_from_logs(){
                 {
                     child_arr = arr[item].split(" ",3);
                     file_path = child_arr[1];
+                    var index = file_path.indexOf("?");
+                    if(-1 != index)
+                    {
+                        file_path = file_path.substring(0, index);
+                    }
+                    file_path = querystring.unescape(file_path);
                 }
             }
 
