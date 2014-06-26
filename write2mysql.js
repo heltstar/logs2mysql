@@ -34,6 +34,8 @@ function write_log_to_mysql(){
         connection.query('INSERT INTO '+ global.CDN_FILE_LFU_STATS +' SET file_path = ?, last_visit_time = ?, visit_count = ?, lfu_weight = ? ON DUPLICATE KEY UPDATE visit_count = visit_count + ?, last_visit_time = ?',
                 [file_path, date_time, count, 23, count, date_time]);
     }
+    console.log("\ninsert into mysql OK.");
+    connection.end();
 }
 
 exports.write2mysql = write_log_to_mysql;

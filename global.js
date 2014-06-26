@@ -1,4 +1,5 @@
 var ROOT_PATH = '/home/wangjian';
+var LOGS_ROOT_PATH = './';
 var log_history = './log_history.json';
 
 var database = 'cdn_db';
@@ -11,7 +12,9 @@ var CDN_FILE_LFU_STATS = 'cdn_file_lfu_stats';
 var CDN_FILE_RECORD = 'cdn_file_record';
 var logs_stats = {lfu_stats:[]};
 
+
 exports.ROOT_PATH = ROOT_PATH;
+exports.LOGS_ROOT_PATH = LOGS_ROOT_PATH;
 exports.log_history = log_history;
 
 exports.database = database;

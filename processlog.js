@@ -3,14 +3,50 @@ var write2mysql = require('./write2mysql.js');
 var getfromlogs = require('./getfromlogs.js');
 var rmcoldfiles = require('./rmcoldfiles.js');
 
+var async = require("async");
+
 var global = require("./global.js");
-var path =".";
 
+/*
+//async.series([
+async.waterfall([
+    function(callback){
+        initjson.init_json();
+        console.log("one: 1");
+        callback();
+    },
+    function(callback){
+        getfromlogs.getfromlogs();
 
-initjson.init_json(path);
+        console.log("two: 2");
+        callback();
+    },
+    function(callback){
+        write2mysql.write2mysql();
+
+        console.log("three : 3");
+        callback();
+    },
+    function(callback){
+        rmcoldfiles.rmcoldfiles();
+
+        console.log("four: 4");
+        callback();
+    }
+],
+
+    function(){
+        console.log("end: ");
+        return;
+    }
+);
+*/
+
+initjson.init_json();
 
 setTimeout(getfromlogs.getfromlogs,1000);
 
-setTimeout(write2mysql.write2mysql,2000);
+//setTimeout(write2mysql.write2mysql,120000);
+setTimeout(write2mysql.write2mysql,10000);
 
-setTimeout(rmcoldfiles.rmcoldfiles, 3000);
+setTimeout(rmcoldfiles.rmcoldfiles, 300000);

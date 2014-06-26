@@ -2,14 +2,14 @@ var ejson  = require('./forjson.js');
 var fs = require('fs');
 var global = require("./global.js");
 
-function explorer(path){
+function explorer(){
     var cnt = 0;
     var logrecord = '{"log":[';
-    var files = fs.readdirSync(path);
+    var files = fs.readdirSync(global.LOGS_ROOT_PATH);
     var log_history_exist = fs.existsSync(global.log_history);
     for (var i = 0; i < files.length; i++)
     {
-        var fstat =fs.statSync(path + '/' + files[i]);
+        var fstat =fs.statSync(global.LOGS_ROOT_PATH + '/' + files[i]);
         if( fstat.isFile())
         {
             if( -1 != files[i].lastIndexOf("access.log"))
