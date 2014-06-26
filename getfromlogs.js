@@ -1,9 +1,7 @@
-
 var sys = require('sys');
 var fs = require('fs');
 var path = require('path');
 var readline = require("readline");
-var linereader = require('line-reader');
 var getdatetime = require('./getdatetime.js');
 var global = require("./global.js");
 
@@ -12,6 +10,8 @@ var logs_stats = global.logs_stats;
 function get_from_logs(){
     var ob;
     try{
+        //delete require.cache[global.log_history];
+        delete require.cache[require.resolve(global.log_history)];
         ob = require(global.log_history);
     }
     catch(err)
@@ -24,7 +24,7 @@ function get_from_logs(){
     var logfiles_length = eval(obj2.log).length;
     for(var i=0; i < logfiles_length; i ++) 
     {
-        console.log(obj2["log"][i].log_file +"---"+ obj2["log"][i].last_modify_time +"---"+obj2["log"][i].offset);
+        console.log(obj2["log"][i].log_file +"---"+ obj2["log"][i].last_modify_time +"---"+obj2["log"][i].offset + "---" + obj2["log"][i].file_sizes);
     }
 
     var file_path = "";
