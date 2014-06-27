@@ -25,21 +25,38 @@ function write_log_to_mysql(){
 
 
     var i = 0;
+    var file_path_id ;
     var all_length = Object.keys(logs_stats).length;
     console.log("items numbers: "+all_length);
 
     for(key in logs_stats)
     {
         i++;
+        console.log("key:"+key);
         (function(i,key){
         file_path = key;
         date_time = logs_stats[key].last_modify_time;
         count = logs_stats[key].pv;
-        connection.query('INSERT INTO '+ global.CDN_FILE_LFU_STATS +' SET file_path = ?, last_visit_time = ?, visit_count = ?, lfu_weight = ? ON DUPLICATE KEY UPDATE visit_count = visit_count + ?, last_visit_time = ?',
-                [file_path, date_time, count, 23, count, date_time], function(err, results) {
+
+        connection.query('SELECT id FROM '+ global.CDN_FILE_RECORD + ' where file_path = "'+ file_path + '"', function(err, rows, fields) {
+            if(err)
+            {
+                console.log("err...");
+                return ;
+            }
+            if(rows[0] == null)
+            {
+                console.log("not exist");
+                return ;
+            }
+            console.log(i+"--file_path_id:"+rows[0].id);
+            file_path_id = rows[0].id;
+
+            connection.query('INSERT INTO '+ global.CDN_FILE_LFU_STATS +' SET file_path_id = ?, last_visit_time = ?, visit_count = ?, lfu_weight = ? ON DUPLICATE KEY UPDATE visit_count = visit_count + ?, last_visit_time = ?',
+                [file_path_id, date_time, count, 23, count, date_time], function(err, results) {
                                 if(err)
                                 {
-                                    console.log("ClientReady Error: " + error.message);
+                                    console.log("ClientReady Error: " + err.message);
                                     connection.end();
                                 }
                                 if(i == (all_length -1))
@@ -49,9 +66,10 @@ function write_log_to_mysql(){
                                 }
                                 else
                                 {
-                                    //console.log(i +'--Inserted: ' + results.affectedRows + ' row.');
-//                                    console.log(i +'--Id inserted: ' + results.insertId);
+//                                    console.log(i +'--Inserted: ' + results.affectedRows + ' row.');
+ //                                   console.log(i +'--Id inserted: ' + results.insertId);
                                 }
+                });
                 });
        })(i,key);
     }

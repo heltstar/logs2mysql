@@ -9,9 +9,10 @@ var user = 'root';
 var password = 'wangjian';
 
 var CDN_FILE_LFU_STATS = 'cdn_file_lfu_stats';
-var CDN_FILE_RECORD = 'cdn_file_record';
+var CDN_FILE_RECORD = 'cdn_file_records';
 var logs_stats = {};
 
+var T = 8640; // 8640s = 1day
 
 exports.ROOT_PATH = ROOT_PATH;
 exports.LOGS_ROOT_PATH = LOGS_ROOT_PATH;
@@ -27,3 +28,5 @@ exports.CDN_FILE_LFU_STATS = CDN_FILE_LFU_STATS;
 exports.CDN_FILE_RECORD = CDN_FILE_RECORD;
 
 exports.logs_stats = logs_stats;
+
+exports.T= T;
