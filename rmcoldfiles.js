@@ -1,9 +1,8 @@
-var sys = require('sys');
 var fs = require('fs');
+var mysql  = require('mysql');
 var global = require("./global.js");
 
 function rmcoldfiles(){
-    var mysql      = require('mysql');
     var connection = mysql.createConnection({
             host     : global.host,
             port     : global.port,

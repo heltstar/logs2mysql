@@ -59,20 +59,22 @@ function get_from_logs(){
                     file_path = querystring.unescape(file_path);
                 }
             }
-
-            if(logs_stats[file_path] != null)
-            {   
-                logs_stats[file_path].pv += 1;
-                if(logs_stats[file_path].last_modify_time < date_time)
-                {   
-                        logs_stats[file_path].last_modify_time = date_time;
-                } 
-            }   
-            else
+            if(file_path != "/")
             {
-                logs_stats[file_path] = {};
-                logs_stats[file_path].pv = 1;
-                logs_stats[file_path].last_modify_time = date_time;
+                if(logs_stats[file_path] != null)
+                {   
+                    logs_stats[file_path].pv += 1;
+                    if(logs_stats[file_path].last_modify_time < date_time)
+                    {   
+                        logs_stats[file_path].last_modify_time = date_time;
+                    } 
+                }   
+                else
+                {
+                    logs_stats[file_path] = {};
+                    logs_stats[file_path].pv = 1;
+                    logs_stats[file_path].last_modify_time = date_time;
+                }
             }
     });
     }

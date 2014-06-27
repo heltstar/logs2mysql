@@ -2,11 +2,7 @@ var initjson  = require('./initjson.js');
 var write2mysql = require('./write2mysql.js');
 var getfromlogs = require('./getfromlogs.js');
 var rmcoldfiles = require('./rmcoldfiles.js');
-
 var async = require("async");
-
-var global = require("./global.js");
-
 /*
 //async.series([
 async.waterfall([
