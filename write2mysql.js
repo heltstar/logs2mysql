@@ -24,19 +24,17 @@ function write_log_to_mysql(){
     connection.connect();
 
 
-    var i;
-    var all_length = logs_stats.lfu_stats.length;
+    var i = 0;
+    var all_length = Object.keys(logs_stats).length;
     console.log("items numbers: "+all_length);
 
-    for(i =0 ;i <all_length; i++)
+    for(key in logs_stats)
     {
-//        console.log(logs_stats.lfu_stats[i]);
-
-        //(function(i){})(i)
-        (function(i){
-        file_path = logs_stats.lfu_stats[i].log_file;
-        date_time = logs_stats.lfu_stats[i].last_modify_time;
-        count = logs_stats.lfu_stats[i].pv;
+        i++;
+        (function(i,key){
+        file_path = key;
+        date_time = logs_stats[key].last_modify_time;
+        count = logs_stats[key].pv;
         connection.query('INSERT INTO '+ global.CDN_FILE_LFU_STATS +' SET file_path = ?, last_visit_time = ?, visit_count = ?, lfu_weight = ? ON DUPLICATE KEY UPDATE visit_count = visit_count + ?, last_visit_time = ?',
                 [file_path, date_time, count, 23, count, date_time], function(err, results) {
                                 if(err)
@@ -52,10 +50,10 @@ function write_log_to_mysql(){
                                 else
                                 {
                                     //console.log(i +'--Inserted: ' + results.affectedRows + ' row.');
-                                    console.log(i +'--Id inserted: ' + results.insertId);
+//                                    console.log(i +'--Id inserted: ' + results.insertId);
                                 }
                 });
-       })(i);
+       })(i,key);
     }
 }
 

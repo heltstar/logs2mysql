@@ -10,7 +10,7 @@ var password = 'wangjian';
 
 var CDN_FILE_LFU_STATS = 'cdn_file_lfu_stats';
 var CDN_FILE_RECORD = 'cdn_file_record';
-var logs_stats = {lfu_stats:[]};
+var logs_stats = {};
 
 
 exports.ROOT_PATH = ROOT_PATH;

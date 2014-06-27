@@ -60,24 +60,19 @@ function get_from_logs(){
                 }
             }
 
-            var length = logs_stats.lfu_stats.length;
-            var j;
-            for(j = 0; j < length; j++)
-            {
-                if(logs_stats.lfu_stats[j].log_file == file_path)
+            if(logs_stats[file_path] != null)
+            {   
+                logs_stats[file_path].pv += 1;
+                if(logs_stats[file_path].last_modify_time < date_time)
                 {   
-                    logs_stats.lfu_stats[j].pv += 1;
-                    if(logs_stats.lfu_stats[j].last_modify_time < date_time)
-                    {   
-                        logs_stats.lfu_stats[j].last_modify_time = date_time;
-                    }   
-                    break;
-                }   
-            }
-            if(j == length)
+                        logs_stats[file_path].last_modify_time = date_time;
+                } 
+            }   
+            else
             {
-                var row = {"log_file": file_path,"last_modify_time": date_time, "pv":1};
-                logs_stats.lfu_stats.push(row);
+                logs_stats[file_path] = {};
+                logs_stats[file_path].pv = 1;
+                logs_stats[file_path].last_modify_time = date_time;
             }
     });
     }
