@@ -71,7 +71,7 @@ function rmcoldfiles(){
                     fs.unlink(file_path, function(err){
                         if(err)
                         {
-                            console.log("remove file error");
+                            console.log("remove " +file_path + "  error" );
                             return ;
                         }
                         console.log("remove file "+file_path +" ok");

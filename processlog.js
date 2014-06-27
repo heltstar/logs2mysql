@@ -46,4 +46,4 @@ setTimeout(getfromlogs.getfromlogs,1000);
 setTimeout(write2mysql.write2mysql,20000);
 
 //setTimeout(rmcoldfiles.rmcoldfiles, 300000);
-setTimeout(rmcoldfiles.rmcoldfiles, 25000);
+//setTimeout(rmcoldfiles.rmcoldfiles, 25000);

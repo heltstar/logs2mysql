@@ -32,12 +32,10 @@ function write_log_to_mysql(){
     for(key in logs_stats)
     {
         i++;
-        console.log("key:"+key);
+        //console.log(i+": "+key +"----" + logs_stats[key].last_modify_time + "----"+logs_stats[key].pv);
+
         (function(i,key){
         file_path = key;
-        date_time = logs_stats[key].last_modify_time;
-        count = logs_stats[key].pv;
-
         connection.query('SELECT id FROM '+ global.CDN_FILE_RECORD + ' where file_path = "'+ file_path + '"', function(err, rows, fields) {
             if(err)
             {
@@ -46,11 +44,12 @@ function write_log_to_mysql(){
             }
             if(rows[0] == null)
             {
-                console.log("not exist");
+                console.log("not exist in " + global.CDN_FILE_RECORD +": " +key);
                 return ;
             }
-            console.log(i+"--file_path_id:"+rows[0].id);
             file_path_id = rows[0].id;
+            date_time = logs_stats[key].last_modify_time;
+            count = logs_stats[key].pv;
 
             connection.query('INSERT INTO '+ global.CDN_FILE_LFU_STATS +' SET file_path_id = ?, last_visit_time = ?, visit_count = ?, lfu_weight = ? ON DUPLICATE KEY UPDATE visit_count = visit_count + ?, last_visit_time = ?',
                 [file_path_id, date_time, count, 23, count, date_time], function(err, results) {
