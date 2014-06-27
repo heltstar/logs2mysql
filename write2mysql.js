@@ -3,6 +3,7 @@ var path = require('path');
 var linereader = require('line-reader');
 var getdatetime = require('./getdatetime.js');
 var global = require("./global.js");
+var rmcoldfiles = require("./rmcoldfiles.js");
 
 var logs_stats = global.logs_stats;
 
@@ -45,7 +46,8 @@ function write_log_to_mysql(){
             if(rows[0] == null)
             {
                 console.log("not exist in " + global.CDN_FILE_RECORD +": " +key);
-                return ;
+                process.exit(1);
+                //return ;
             }
             file_path_id = rows[0].id;
             date_time = logs_stats[key].last_modify_time;
@@ -61,7 +63,8 @@ function write_log_to_mysql(){
                                 if(i == (all_length -1))
                                 {
                                     console.log("all of items : "+all_length);
-                                    connection.end();
+                                    rmcoldfiles.rmcoldfiles(connection);
+                                    //connection.end();
                                 }
                                 else
                                 {
