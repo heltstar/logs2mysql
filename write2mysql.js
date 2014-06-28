@@ -33,7 +33,7 @@ function write_log_to_mysql(){
     for(key in logs_stats)
     {
         i++;
-        //console.log(i+": "+key +"----" + logs_stats[key].last_modify_time + "----"+logs_stats[key].pv);
+        console.log(i+": "+key +"----" + logs_stats[key].last_modify_time + "----"+logs_stats[key].pv);
         (function(i,key){
         file_path = key;
         connection.query('SELECT id FROM '+ global.CDN_FILE_RECORD + ' where file_path = "'+ file_path + '"', function(err, rows, fields) {
@@ -58,7 +58,8 @@ function write_log_to_mysql(){
                                     console.log("ClientReady Error: " + err.message);
                                     connection.end();
                                 }
-                                if(i == (all_length -1))
+                                //if(i == (all_length -1))
+                                if(i == all_length)
                                 {
                                     console.log("all of items : "+all_length);
                                     
@@ -83,8 +84,9 @@ function write_log_to_mysql(){
                                 }
                                 else
                                 {
-//                                    console.log(i +'--Inserted: ' + results.affectedRows + ' row.');
- //                                   console.log(i +'--Id inserted: ' + results.insertId);
+                                   console.log(i +'--Inserted: ' + results.affectedRows + ' row.');
+                                   console.log(i +'--Id inserted: ' + results.insertId);
+                                   //i++;
                                 }
                 });
                 });

@@ -1,6 +1,8 @@
 var fs = require('fs');
 var exec = require('child_process').exec;
 var global = require("./global.js");
+var resetMysql = require("./resetMysql.js");
+
 var DOWORK_T = global.DOWORK_T;
 
 function rmcoldfiles(connection){
@@ -22,8 +24,9 @@ function rmcoldfiles(connection){
                   console.log("pcent: " + parseInt(stdout));
                   if(global.disk_used_level > parseInt(stdout))
                   {
-                      connection.end();
-                      process.exit(0);
+                      //connection.end();
+                      resetMysql.f(connection);
+                      //process.exit(0);
                   }
             });
 
@@ -71,8 +74,9 @@ function rmcoldfiles(connection){
                             if(i == all_rows_length -1)
                             {
                                 console.log('remove error, flag = true, exit with 0');
-                                connection.end();
-                                process.exit(0);
+                                resetMysql.f(connection);
+                                //connection.end();
+                                //process.exit(0);
                             }
                             return ;
                         }
@@ -83,8 +87,9 @@ function rmcoldfiles(connection){
                             if(i == all_rows_length -1)
                             {
                                 console.log('flag = true, exit with 0');
-                                connection.end();
-                                process.exit(0);
+                                resetMysql.f(connection);
+                                //connection.end();
+                                //process.exit(0);
                             }
                          });
                    }); 
@@ -95,8 +100,9 @@ function rmcoldfiles(connection){
                 if(i == all_rows_length -1)
                 {
                     console.log('flag = false, exit with 0');
-                    connection.end();
-                    process.exit(0);
+                    resetMysql.f(connection);
+                    //connection.end();
+                    //process.exit(0);
                 }
             }
         }
