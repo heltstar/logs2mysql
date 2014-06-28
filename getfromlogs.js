@@ -7,17 +7,18 @@ var getdatetime = require('./getdatetime.js');
 var global = require("./global.js");
 
 var logs_stats = global.logs_stats;
+var last_all_logfiles_info_path = global.HISTORY_ROOT_PATH + global.last_all_logfiles_info;
 
 function get_from_logs(){
     var ob;
     try{
         //delete require.cache[global.log_history];
-        delete require.cache[require.resolve(global.log_history)];
-        ob = require(global.log_history);
+        delete require.cache[require.resolve(last_all_logfiles_info_path)];
+        ob = require(last_all_logfiles_info_path);
     }
     catch(err)
     {
-        console.log("writewmysql(): " + global.log_history+" is not exist:"+err);
+        console.log("writewmysql(): " + last_all_logfiles_info_path +" is not exist:"+err);
         path.exit(1);
     }
     var str = JSON.stringify(ob);
@@ -57,6 +58,13 @@ function get_from_logs(){
                         file_path = file_path.substring(0, index);
                     }
                     file_path = querystring.unescape(file_path);
+                }
+                else if(4 == item)
+                {
+                    if(arr[item] == "404")
+                    {
+                        return;
+                    }
                 }
             }
             if(file_path != "/")

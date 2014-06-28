@@ -63,8 +63,17 @@ function write_log_to_mysql(){
                                 if(i == (all_length -1))
                                 {
                                     console.log("all of items : "+all_length);
-                                    rmcoldfiles.rmcoldfiles(connection);
-                                    //connection.end();
+                                    if(global.disk_used_now >= global.disk_used_level)
+                                    {
+                                        console.log(global.disk_used_now + " >= "+ global.disk_used_level + ': must to remove cold files now.');
+                                        rmcoldfiles.rmcoldfiles(connection);
+                                    }
+                                    else
+                                    {
+                                        console.log(global.disk_used_now + " < "+ global.disk_used_level + ': not need to remove cold files.');
+                                        connection.end();
+                                        process.exit(0);
+                                    }
                                 }
                                 else
                                 {

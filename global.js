@@ -1,6 +1,9 @@
-var ROOT_PATH = '/home/wangjian';
-var LOGS_ROOT_PATH = './';
-var log_history = './log_history.json';
+var DOCUMENT_ROOT_PATH = '/home/wangjian/node/logs2mysql'; // xx.mp4 , xx.jpg ...
+var LOG_ROOT_PATH = '/home/wangjian/node/logs2mysql/';     //access.log, xx-access.log ...
+var HISTORY_ROOT_PATH = '/home/wangjian/node/logs2mysql/'; //lastResetTime.json   last_all_logfiles_info.json 
+
+var last_all_logfiles_info= 'lastAllLogfilesInfo.json';
+var lastResetTime = "lastResetTime.json";
 
 var database = 'cdn_db';
 var host= '192.168.56.101';
@@ -10,13 +13,20 @@ var password = 'wangjian';
 
 var CDN_FILE_LFU_STATS = 'cdn_file_lfu_stats';
 var CDN_FILE_RECORD = 'cdn_file_records';
+
 var logs_stats = {};
+var disk_used_now = 85;
+var disk_used_level = 85;
 
-var T = 8640; // 8640s = 1day
+var RESET_T = 7*24*60*60*1000; // 1 week
+var DOWORK_T = 1*24*60*60;     // 1 day
 
-exports.ROOT_PATH = ROOT_PATH;
-exports.LOGS_ROOT_PATH = LOGS_ROOT_PATH;
-exports.log_history = log_history;
+exports.DOCUMENT_ROOT_PATH = DOCUMENT_ROOT_PATH;
+exports.HISTORY_ROOT_PATH = HISTORY_ROOT_PATH;
+exports.LOG_ROOT_PATH = LOG_ROOT_PATH;
+
+exports.last_all_logfiles_info = last_all_logfiles_info;
+exports.lastResetTime = lastResetTime;
 
 exports.database = database;
 exports.host= host;
@@ -28,5 +38,8 @@ exports.CDN_FILE_LFU_STATS = CDN_FILE_LFU_STATS;
 exports.CDN_FILE_RECORD = CDN_FILE_RECORD;
 
 exports.logs_stats = logs_stats;
+exports.disk_used_now = disk_used_now;
+exports.disk_used_level = disk_used_level;
 
-exports.T= T;
+exports.RESET_T= RESET_T;
+exports.DOWORK_T= DOWORK_T;

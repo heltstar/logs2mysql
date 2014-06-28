@@ -1,15 +1,16 @@
 var ejson  = require('./forjson.js');
 var fs = require('fs');
 var global = require("./global.js");
+var last_all_logfiles_info_path = global.HISTORY_ROOT_PATH + global.last_all_logfiles_info;
 
 function explorer(){
     var cnt = 0;
     var logrecord = '{"log":[';
-    var files = fs.readdirSync(global.LOGS_ROOT_PATH);
-    var log_history_exist = fs.existsSync(global.log_history);
+    var files = fs.readdirSync(global.LOG_ROOT_PATH);
+    var last_all_logfiles_info_exist = fs.existsSync(last_all_logfiles_info_path);
     for (var i = 0; i < files.length; i++)
     {
-        var fstat =fs.statSync(global.LOGS_ROOT_PATH + '/' + files[i]);
+        var fstat =fs.statSync(global.LOG_ROOT_PATH + '/' + files[i]);
         if( fstat.isFile())
         {
             if( -1 != files[i].lastIndexOf("access.log"))
@@ -19,7 +20,7 @@ function explorer(){
                     logrecord += ',';
                 }
                 var json_item;
-                if((true == log_history_exist) &&  (json_item = ejson.exist_json(files[i])))
+                if((true == last_all_logfiles_info_exist) &&  (json_item = ejson.exist_json(files[i])))
                 {
                     logrecord += '{"log_file": "' + files[i] + '","last_modify_time": "' + fstat.atime + '", "offset": ' +json_item.file_sizes +', "file_sizes": ' + fstat.size + '}';
                 }
@@ -34,12 +35,12 @@ function explorer(){
     }
 
         logrecord += ']' +'}';
-        fs.writeFileSync("tmp.json", logrecord);
-        if(fs.existsSync(global.log_history))
+        fs.writeFileSync(global.HISTORY_ROOT_PATH + "tmp.json", logrecord);
+        if(fs.existsSync(last_all_logfiles_info_path))
         {
-            fs.unlinkSync(global.log_history);
+            fs.unlinkSync(last_all_logfiles_info_path);
         }
-        fs.renameSync("tmp.json", global.log_history);
+        fs.renameSync(global.HISTORY_ROOT_PATH + "tmp.json", last_all_logfiles_info_path);
 }
 
     exports.init_json = explorer;

@@ -1,15 +1,15 @@
 
 var global = require("./global.js");
-
+var last_all_logfiles_info_path = global.HISTORY_ROOT_PATH + global.last_all_logfiles_info;
 function exist_json(file)
 {
     var ob;
     try {
-        ob = require(global.log_history);
+        ob = require(last_all_logfiles_info_path);
     }
     catch(err)
     {
-        console.log("exist_json():  "+global.log_history+" is not exist:"+err);
+        console.log("exist_json():  " + last_all_logfiles_info_path + " is not exist:"+err);
         return null;
     }
 

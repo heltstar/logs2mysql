@@ -1,4 +1,5 @@
 *access.log
 test
 test/*
-log_history.json
+*.json
+*.txt
