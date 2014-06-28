@@ -29,7 +29,7 @@ function r(connection){
                             if(err)throw err;
                             console.log("reset " + global.CDN_FILE_LFU_STATS + " success.");
                             connection.end();
-                            process.exit(0);
+//                            process.exit(0);
                 });
                 w();
             }
@@ -37,7 +37,7 @@ function r(connection){
             {
                 console.log(difftime + " < " + RESET_T +": need not to reset the mysql");
                 connection.end();
-                process.exit(0);
+//                process.exit(0);
             }
     });
 }
@@ -48,7 +48,7 @@ function f(connection){
         w();
         console.log(lastResetTimeFile + "not exist, write date-time data to " + lastResetTimeFile + " and then return.");
         connection.end();
-        process.exit(0);
+//        process.exit(0);
     }
     r(connection);
 }

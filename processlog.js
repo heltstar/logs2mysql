@@ -15,5 +15,7 @@ setTimeout(write2mysql.write2mysql,20000);
 //setTimeout(rmcoldfiles.rmcoldfiles, 25000);
 
 }
-processlog();
+
+//processlog();
+
 exports.processlog = processlog;

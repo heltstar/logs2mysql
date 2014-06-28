@@ -78,14 +78,14 @@ function write_log_to_mysql(){
                                         {
                                             console.log(global.disk_used_now + " < "+ global.disk_used_level + ': not need to remove cold files.');
                                             connection.end();
-                                            process.exit(0);
+                                            //process.exit(0);
                                         }
                                     });
                                 }
                                 else
                                 {
-                                   console.log(i +'--Inserted: ' + results.affectedRows + ' row.');
-                                   console.log(i +'--Id inserted: ' + results.insertId);
+                                   //console.log(i +'--Inserted: ' + results.affectedRows + ' row.');
+                                   //console.log(i +'--Id inserted: ' + results.insertId);
                                    //i++;
                                 }
                 });

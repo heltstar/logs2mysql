@@ -20,8 +20,8 @@ function rmcoldfiles(connection){
                         console.log('exec error: ' + err);
                         return ;
                   }
-                  console.log('stdout: ');
-                  console.log("pcent: " + parseInt(stdout));
+                  //console.log('stdout: ');
+                  //console.log("pcent: " + parseInt(stdout));
                   if(global.disk_used_level > parseInt(stdout))
                   {
                       //connection.end();

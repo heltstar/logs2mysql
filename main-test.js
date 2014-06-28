@@ -5,4 +5,4 @@ var DOWORK_T = global.DOWORK_T;
 //processlog.processlog();
 
 //setInterval(processlog.processlog, DOWORK_T);
-setInterval(processlog.processlog, 2*60*60*1000);
+setInterval(processlog.processlog, 5*60*1000);
