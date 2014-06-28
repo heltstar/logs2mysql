@@ -1,4 +1,5 @@
 var fs = require('fs');
+var exec = require('child_process').exec;
 var global = require("./global.js");
 var DOWORK_T = global.DOWORK_T;
 
@@ -11,6 +12,21 @@ function rmcoldfiles(connection){
         for(i = 0; i < all_rows_length; i++)
         {   
             var flag = false;
+            var child = exec("df -a --output=pcent,source|grep sda|awk '{print $1}'",
+            function (err, stdout, stderr) {
+                  if (err) {
+                        console.log('exec error: ' + err);
+                        return ;
+                  }
+                  console.log('stdout: ');
+                  console.log("pcent: " + parseInt(stdout));
+                  if(global.disk_used_level > parseInt(stdout))
+                  {
+                      connection.end();
+                      process.exit(0);
+                  }
+            });
+
             if(rows[i].difftime > 20*DOWORK_T)
             {
                     flag = true;
@@ -45,7 +61,7 @@ function rmcoldfiles(connection){
             {
                 var file_path_id = rows[i].file_path_id;
                 var file_path = rows[i].file_path;
-                
+
                 (function(file_path_id, file_path, i, all_rows_length){
                     var vfile_path = global.DOCUMENT_ROOT_PATH + file_path;
                     fs.unlink(vfile_path, function(err){

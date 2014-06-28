@@ -1,4 +1,6 @@
 var sys = require('sys');
+var sys = require('sys');
+var exec = require('child_process').exec;
 var path = require('path');
 var linereader = require('line-reader');
 var getdatetime = require('./getdatetime.js');
@@ -59,17 +61,25 @@ function write_log_to_mysql(){
                                 if(i == (all_length -1))
                                 {
                                     console.log("all of items : "+all_length);
-                                    if(global.disk_used_now >= global.disk_used_level)
-                                    {
-                                        console.log(global.disk_used_now + " >= "+ global.disk_used_level + ': must to remove cold files now.');
-                                        rmcoldfiles.rmcoldfiles(connection);
-                                    }
-                                    else
-                                    {
-                                        console.log(global.disk_used_now + " < "+ global.disk_used_level + ': not need to remove cold files.');
-                                        connection.end();
-                                        process.exit(0);
-                                    }
+                                    
+                                    var child = exec("df -a --output=pcent,source|grep sda|awk '{print $1}'",function (error, stdout, stderr) {
+                                        if (error !== null) {
+                                            console.log('exec error: ' + error);
+                                        }
+                                        console.log("disk used pcent: " + parseInt(stdout));
+                                        global.disk_used_now = parseInt(stdout);
+                                        if(global.disk_used_now >= global.disk_used_level)
+                                        {
+                                            console.log(global.disk_used_now + " >= "+ global.disk_used_level + ': must to remove cold files now.');
+                                            rmcoldfiles.rmcoldfiles(connection);
+                                        }
+                                        else
+                                        {
+                                            console.log(global.disk_used_now + " < "+ global.disk_used_level + ': not need to remove cold files.');
+                                            connection.end();
+                                            process.exit(0);
+                                        }
+                                    });
                                 }
                                 else
                                 {

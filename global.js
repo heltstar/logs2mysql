@@ -16,7 +16,7 @@ var CDN_FILE_RECORD = 'cdn_file_records';
 
 var logs_stats = {};
 var disk_used_now = 85;
-var disk_used_level = 85;
+var disk_used_level = 10;
 
 var RESET_T = 7*24*60*60*1000; // 1 week
 var DOWORK_T = 1*24*60*60;     // 1 day
