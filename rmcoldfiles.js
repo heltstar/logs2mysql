@@ -6,7 +6,6 @@ function rmcoldfiles(connection){
 
     connection.query("SELECT c.file_path_id AS file_path_id, p.file_path AS file_path, c.visit_count AS visit_count, time_to_sec(timediff(now(), last_visit_time)) AS difftime, p.file_size AS file_size FROM cdn_file_records AS  p, cdn_file_lfu_stats AS c WHERE p.id = c.file_path_id ORDER BY file_size DESC", function(err, rows, fields){
         if (err) throw err;
-
         var i;
         var all_rows_length = rows.length;
         for(i = 0; i < all_rows_length; i++)
@@ -71,9 +70,8 @@ function rmcoldfiles(connection){
                                 connection.end();
                                 process.exit(0);
                             }
-                            });
-                        }); 
-                    //});
+                         });
+                   }); 
                 })(file_path_id,file_path, i, all_rows_length);
             }
             else
@@ -85,12 +83,8 @@ function rmcoldfiles(connection){
                     process.exit(0);
                 }
             }
-    }
-
-        //process.exit(0);
+        }
     }); 
 }
-//connection.end();
-
 
 exports.rmcoldfiles = rmcoldfiles;

@@ -7,7 +7,6 @@ var rmcoldfiles = require("./rmcoldfiles.js");
 
 var logs_stats = global.logs_stats;
 
-
 function write_log_to_mysql(){
 
     var file_path = "";
@@ -24,7 +23,6 @@ function write_log_to_mysql(){
         });
     connection.connect();
 
-
     var i = 0;
     var file_path_id ;
     var all_length = Object.keys(logs_stats).length;
@@ -34,20 +32,18 @@ function write_log_to_mysql(){
     {
         i++;
         //console.log(i+": "+key +"----" + logs_stats[key].last_modify_time + "----"+logs_stats[key].pv);
-
         (function(i,key){
         file_path = key;
         connection.query('SELECT id FROM '+ global.CDN_FILE_RECORD + ' where file_path = "'+ file_path + '"', function(err, rows, fields) {
             if(err)
             {
                 console.log("err...");
-                return ;
+                throw err;
             }
             if(rows[0] == null)
             {
                 console.log("not exist in " + global.CDN_FILE_RECORD +": " +key);
                 process.exit(1);
-                //return ;
             }
             file_path_id = rows[0].id;
             date_time = logs_stats[key].last_modify_time;
