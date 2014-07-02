@@ -17,13 +17,9 @@ function exist_json(file)
 
     var str = JSON.stringify(ob);
     var obj2 = JSON.parse(str);
-    var length = eval(obj2.log).length;
-    for(var i=0; i < length; i ++)
+    if( null != obj2[file])
     {
-        if( file == obj2.log[i].log_file)
-        {
-            return obj2.log[i];
-        }
+       return obj2[file];
     }
     return null;
 }

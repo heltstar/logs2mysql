@@ -23,26 +23,25 @@ function get_from_logs(){
     }
     var str = JSON.stringify(ob);
     var obj2 = JSON.parse(str);
-    var logfiles_length = eval(obj2.log).length;
-    for(var i=0; i < logfiles_length; i ++) 
+    var logfiles_length = Object.keys(obj2).length;
+    for(key in obj2) 
     {
-        console.log(obj2["log"][i].log_file +"---"+ obj2["log"][i].last_modify_time +"---"+obj2["log"][i].offset + "---" + obj2["log"][i].file_sizes);
+        console.log(key +"---"+ obj2[key].last_modify_time +"---"+obj2[key].offset + "---" + obj2[key].file_sizes);
     }
 
     var file_path = "";
     var date_time= "";
-    var cnt = 0;
     var finish_cnt = 0;
 //    console.log("start open access.log .............");
-    for(cnt = 0; cnt < logfiles_length; cnt ++){
+    for(key in obj2){
         var rd = readline.createInterface({
-            input: fs.createReadStream(obj2["log"][cnt].log_file, {flags:'r', mode:0644, start:obj2["log"][cnt].offset, end:obj2["log"][cnt].file_sizes}),
+            input: fs.createReadStream(key, {flags:'r', mode:0644, start:obj2[key].offset, end:obj2[key].file_sizes}),
             output: process.stdout,
             terminal: false
         });
 
 //    console.log("start read access.log line.............");
-    (function(cnt){
+    (function(){
     rd.on('line', function(line){
             var arr, item, child_arr, child_item;
 //            console.log(line);
@@ -98,7 +97,6 @@ function get_from_logs(){
             }
     }).on("close",function(err) {
             if(err)console.log("readCreatem close error: " + err); 
-            console.log(cnt + ": cnt readCreatem close ok"); 
             console.log(finish_cnt + ": finish_cnt readCreatem close ok"); 
             if(finish_cnt == logfiles_length - 1)
             {
@@ -110,7 +108,7 @@ function get_from_logs(){
     }).on("error",function(err) {
             console.log("readCreatem error: " + err); 
     });
-    })(cnt);
+    })();
     }
 
 }

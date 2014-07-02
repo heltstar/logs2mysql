@@ -8,7 +8,7 @@ var last_all_logfiles_info_path = global.HISTORY_ROOT_PATH + global.last_all_log
 
 function explorer(){
     var cnt = 0;
-    var logrecord = '{"log":[';
+    var logrecord = '{';
 //    console.log("fs.readdirSync(global.LOG_ROOT_PATH) start...... ");
     var files = fs.readdirSync(global.LOG_ROOT_PATH);
     var last_all_logfiles_info_exist = fs.existsSync(last_all_logfiles_info_path);
@@ -27,12 +27,12 @@ function explorer(){
                 var json_item;
                 if((true == last_all_logfiles_info_exist) &&  (json_item = ejson.exist_json(global.LOG_ROOT_PATH + files[i])))
                 {
-                    logrecord += '{"log_file": "' + global.LOG_ROOT_PATH + files[i] + '","last_modify_time": "' + fstat.atime + '", "offset": ' +json_item.file_sizes +', "file_sizes": ' + fstat.size + '}';
+                    logrecord +=  '"' + global.LOG_ROOT_PATH + files[i] + '": {"last_modify_time": "' + fstat.atime + '", "offset": ' +json_item.file_sizes +', "file_sizes": ' + fstat.size + '}';
                 }
                 else
                 {   
 //                    console.log("json_item = " + json_item);
-                    logrecord += '{"log_file": "' + global.LOG_ROOT_PATH + files[i] + '","last_modify_time": "' + fstat.atime + '", "offset": 0'+', "file_sizes": ' + fstat.size +'}';
+                    logrecord += '"' + global.LOG_ROOT_PATH + files[i] + '": {"last_modify_time": "' + fstat.atime + '", "offset": 0'+', "file_sizes": ' + fstat.size +'}';
                 }
                 cnt ++; 
             }    
@@ -40,7 +40,7 @@ function explorer(){
 
     }
 
-        logrecord += ']' +'}';
+        logrecord += '}';
         fs.writeFileSync(global.HISTORY_ROOT_PATH + "tmp.json", logrecord);
         if(fs.existsSync(last_all_logfiles_info_path))
         {
