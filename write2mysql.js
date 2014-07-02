@@ -2,7 +2,6 @@ var sys = require('sys');
 var sys = require('sys');
 var exec = require('child_process').exec;
 var path = require('path');
-var linereader = require('line-reader');
 var getdatetime = require('./getdatetime.js');
 var global = require("./global.js");
 var rmcoldfiles = require("./rmcoldfiles.js");
@@ -51,8 +50,8 @@ function write_log_to_mysql(){
             date_time = logs_stats[key].last_modify_time;
             count = logs_stats[key].pv;
 
-            connection.query('INSERT INTO '+ global.CDN_FILE_LFU_STATS +' SET file_path_id = ?, last_visit_time = ?, visit_count = ?, lfu_weight = ? ON DUPLICATE KEY UPDATE visit_count = visit_count + ?, last_visit_time = ?',
-                [file_path_id, date_time, count, 23, count, date_time], function(err, results) {
+            connection.query('INSERT INTO '+ global.CDN_FILE_LFU_STATS +' SET file_path_id = ?, last_visit_time = ?, visit_count = ? ON DUPLICATE KEY UPDATE visit_count = visit_count + ?, last_visit_time = ?',
+                [file_path_id, date_time, count, count, date_time], function(err, results) {
                                 if(err)
                                 {
                                     console.log("ClientReady Error: " + err.message);
@@ -63,9 +62,14 @@ function write_log_to_mysql(){
                                 {
                                     console.log("all of items : "+all_length);
                                     
-                                    var child = exec("df -a --output=pcent,source|grep sda|awk '{print $1}'",function (error, stdout, stderr) {
-                                        if (error !== null) {
-                                            console.log('exec error: ' + error);
+                                    for(k in logs_stats)
+                                    {
+                                        delete logs_stats[k];
+                                    }
+                                    //var child = exec("df -a --output=pcent,source|grep sda|awk '{print $1}'",function (err, stdout, stderr) {
+                                    var child = exec("df -ah|grep sda|awk '{print $5}'",function (err, stdout, stderr) {
+                                        if (err !== null) {
+                                            console.log('exec err: ' + err);
                                         }
                                         console.log("disk used pcent: " + parseInt(stdout));
                                         global.disk_used_now = parseInt(stdout);
@@ -78,6 +82,7 @@ function write_log_to_mysql(){
                                         {
                                             console.log(global.disk_used_now + " < "+ global.disk_used_level + ': not need to remove cold files.');
                                             connection.end();
+                                            return ;
                                             //process.exit(0);
                                         }
                                     });

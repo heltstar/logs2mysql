@@ -5,6 +5,7 @@ var readline = require("readline");
 var querystring = require('querystring');
 var getdatetime = require('./getdatetime.js');
 var global = require("./global.js");
+var write2mysql = require('./write2mysql.js');
 
 var logs_stats = global.logs_stats;
 var last_all_logfiles_info_path = global.HISTORY_ROOT_PATH + global.last_all_logfiles_info;
@@ -12,7 +13,6 @@ var last_all_logfiles_info_path = global.HISTORY_ROOT_PATH + global.last_all_log
 function get_from_logs(){
     var ob;
     try{
-        //delete require.cache[global.log_history];
         delete require.cache[require.resolve(last_all_logfiles_info_path)];
         ob = require(last_all_logfiles_info_path);
     }
@@ -31,16 +31,21 @@ function get_from_logs(){
 
     var file_path = "";
     var date_time= "";
-
-    for(var cnt = 0; cnt < logfiles_length; cnt ++){
+    var cnt = 0;
+    var finish_cnt = 0;
+//    console.log("start open access.log .............");
+    for(cnt = 0; cnt < logfiles_length; cnt ++){
         var rd = readline.createInterface({
-            input: fs.createReadStream(obj2["log"][cnt].log_file, {start:obj2["log"][cnt].offset, end:obj2["log"][cnt].file_sizes}),
+            input: fs.createReadStream(obj2["log"][cnt].log_file, {flags:'r', mode:0644, start:obj2["log"][cnt].offset, end:obj2["log"][cnt].file_sizes}),
             output: process.stdout,
             terminal: false
         });
 
+//    console.log("start read access.log line.............");
+    (function(cnt){
     rd.on('line', function(line){
             var arr, item, child_arr, child_item;
+//            console.log(line);
             arr =line.split(" - ", 8);
             for(item in arr) 
             {
@@ -58,11 +63,17 @@ function get_from_logs(){
                         file_path = file_path.substring(0, index);
                     }
                     file_path = querystring.unescape(file_path);
+                    if(-1 == file_path.indexOf("."))
+                    {
+//                        console.log("is not file, maybe dir... ");
+                        return ;
+                    }
                 }
                 else if(4 == item)
                 {
                     if(arr[item] == "404")
                     {
+ //                       console.log("file not found: 404");
                         return;
                     }
                 }
@@ -83,9 +94,25 @@ function get_from_logs(){
                     logs_stats[file_path].pv = 1;
                     logs_stats[file_path].last_modify_time = date_time;
                 }
+                //console.log(logs_stats[file_path]);
             }
+    }).on("close",function(err) {
+            if(err)console.log("readCreatem close error: " + err); 
+            console.log(cnt + ": cnt readCreatem close ok"); 
+            console.log(finish_cnt + ": finish_cnt readCreatem close ok"); 
+            if(finish_cnt == logfiles_length - 1)
+            {
+                console.log("---all files read ok---");
+                write2mysql.write2mysql();
+            }
+            finish_cnt++;
+            
+    }).on("error",function(err) {
+            console.log("readCreatem error: " + err); 
     });
+    })(cnt);
     }
+
 }
 
 exports.getfromlogs = get_from_logs;

@@ -14,19 +14,16 @@ function rmcoldfiles(connection){
         for(i = 0; i < all_rows_length; i++)
         {   
             var flag = false;
-            var child = exec("df -a --output=pcent,source|grep sda|awk '{print $1}'",
-            function (err, stdout, stderr) {
+            var child = exec("df -ah|grep sda|awk '{print $5}'", function (err, stdout, stderr) {
                   if (err) {
                         console.log('exec error: ' + err);
                         return ;
                   }
-                  //console.log('stdout: ');
                   //console.log("pcent: " + parseInt(stdout));
                   if(global.disk_used_level > parseInt(stdout))
                   {
                       //connection.end();
                       resetMysql.f(connection);
-                      //process.exit(0);
                   }
             });
 

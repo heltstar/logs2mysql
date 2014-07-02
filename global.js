@@ -1,6 +1,6 @@
-var DOCUMENT_ROOT_PATH = '/home/wangjian/node/logs2mysql'; // xx.mp4 , xx.jpg ...
-var LOG_ROOT_PATH = '/home/wangjian/node/logs2mysql/';     //access.log, xx-access.log ...
-var HISTORY_ROOT_PATH = '/home/wangjian/node/logs2mysql/'; //lastResetTime.json   last_all_logfiles_info.json 
+var DOCUMENT_ROOT_PATH = '/usr/local/nginx-1.6.0/html'; // xx.mp4 , xx.jpg ...
+var LOG_ROOT_PATH = '/usr/local/nginx-1.6.0/logs/';     //access.log, xx-access.log ...
+var HISTORY_ROOT_PATH = '/usr/local/nginx-1.6.0/logs/'; //lastResetTime.json ... 
 
 var last_all_logfiles_info= 'lastAllLogfilesInfo.json';
 var lastResetTime = "lastResetTime.json";
@@ -15,12 +15,13 @@ var CDN_FILE_LFU_STATS = 'cdn_file_lfu_stats';
 var CDN_FILE_RECORD = 'cdn_file_records';
 
 var logs_stats = {};
-var disk_used_now = 85;
-var disk_used_level = 10;
+var disk_used_now = 0;
+var disk_used_level = 85;
 
-//var RESET_T = 7*24*60*60*1000; // 1 week
-var RESET_T = 60*1000; // 1 week
-var DOWORK_T = 1*24*60*60;     // 1 day
+var RESET_T = 7*24*60*60*1000; // 1 week
+//var RESET_T = 60*1000; 
+//var DOWORK_T = 1*24*60*60;     // 1 day
+var DOWORK_T = 7*60;     
 
 exports.DOCUMENT_ROOT_PATH = DOCUMENT_ROOT_PATH;
 exports.HISTORY_ROOT_PATH = HISTORY_ROOT_PATH;
